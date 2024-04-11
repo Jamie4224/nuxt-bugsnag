@@ -13,6 +13,7 @@ export interface ModuleOptions {
   disabled: boolean
   publishRelease: boolean
   disableLog: boolean
+  disableServerSide: boolean
   baseUrl: string
   projectRoot: string
   config:
@@ -38,6 +39,7 @@ export default defineNuxtModule<ModuleOptions>({
     disabled: false,
     publishRelease: false,
     disableLog: false,
+    disableServerSide: false,
     baseUrl: 'http://localhost:3000',
     config: {
       notifyReleaseStages: [],
@@ -69,7 +71,9 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     // server
-    addServerPlugin(resolve('./runtime/server/plugins/bugsnag'))
+    if (!options.disableServerSide) {
+      addServerPlugin(resolve('./runtime/server/plugins/bugsnag'))
+    }
 
     extendViteConfig((config) => {
       config.optimizeDeps = config.optimizeDeps || {}
@@ -79,22 +83,24 @@ export default defineNuxtModule<ModuleOptions>({
       )
     })
 
-    nuxt.addHooks({
-      'nitro:config': (config) => {
-        if (config.imports === undefined) {
-          config.imports = {
-            imports: []
+    if (!options.disableServerSide) {
+      nuxt.addHooks({
+        'nitro:config': (config) => {
+          if (config.imports === undefined) {
+            config.imports = {
+              imports: []
+            }
           }
-        }
 
-        // @ts-ignore
-        config.imports.imports.push({
-          name: 'useBugsnag',
-          as: 'useBugsnag',
-          from: resolve('./runtime/server/composables/useBugsnag')
-        })
-      }
-    })
+          // @ts-ignore
+          config.imports.imports.push({
+            name: 'useBugsnag',
+            as: 'useBugsnag',
+            from: resolve('./runtime/server/composables/useBugsnag')
+          })
+        }
+      })
+    }
 
     if (!options.publishRelease || nuxt.options.dev) {
       return

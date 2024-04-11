@@ -1,6 +1,6 @@
 {
   "name": "nuxt-bugsnag",
-  "version": "7.2.3",
+  "version": "7.2.4",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -23,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build build",
+    "prepack": "npm run dev:prepare && nuxt-module-build build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
