@@ -8,24 +8,24 @@ import mockBugsnag from '../utils/mockBugsnag'
 export default defineNuxtPlugin((nuxtApp) => {
   const config: RuntimeConfig = useRuntimeConfig()
   const options = enhanceOptions<BrowserConfig>(config.public.bugsnag)
-
-
+  Bugsnag.start(options)
+  return {}
 
   // we check the internal client to prevent the [bugsnag] Bugsnag.start() was called more than once. Ignoring. error
-  let client: Client | null = (Bugsnag as any)._client
-  if (client === null) {
-    try {
-      client = Bugsnag.start(options)
-    } catch (error) {
-      console.log('[Bugsnag] started in mock mode')
-      return {
-        provide: {
-          bugsnag: mockBugsnag
-        }
-      }
-    }
-  }
-  return {}
+  // let client: Client | null = (Bugsnag as any)._client
+  // if (client === null) {
+  //   try {
+  //
+  //   } catch (error) {
+  //     console.log('[Bugsnag] started in mock mode')
+  //     return {
+  //       provide: {
+  //         bugsnag: mockBugsnag
+  //       }
+  //     }
+  //   }
+  // }
+  // return {}
 
   //
   // nuxtApp.vueApp.provide('bugsnag-client', client)
