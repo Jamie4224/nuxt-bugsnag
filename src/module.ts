@@ -56,10 +56,7 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.runtimeConfig.public.bugsnag,
       options.config
     ) as any
-    if (options.disabled) {
-      console.log('[bugsnag] module disabled. Startup interrupted')
-      return
-    }
+
 
     // client
     addPlugin(resolve('./runtime/client/plugin'))
@@ -69,6 +66,10 @@ export default defineNuxtModule<ModuleOptions>({
       as: 'useBugsnag',
       from: resolve('./runtime/client/composables/useBugsnag')
     })
+    if (options.disabled) {
+      console.log('[bugsnag] module disabled. Startup interrupted')
+      return
+    }
 
     // server
     if (!options.disableServerSide) {
